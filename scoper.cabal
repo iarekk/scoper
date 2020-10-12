@@ -4,11 +4,11 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: ace90f5fa6850b4f00e51fecfcca29526031401427ec25a3cbfd83fb1c0cc71f
+-- hash: f6d3fff70811b879b8d3dcb2e26e7eca2f1baf50fb553f5a0e1ab6b839b1f886
 
 name:           scoper
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/iarekk/scoper#readme>
+description:    Please see the README on GitHub at <https://github.com/githubuser/scoper#readme>
 homepage:       https://github.com/iarekk/scoper#readme
 bug-reports:    https://github.com/iarekk/scoper/issues
 author:         Iarek Kovtunenko
@@ -29,20 +29,24 @@ library
   exposed-modules:
       Lib
   other-modules:
+      Paths_scoper
   hs-source-dirs:
       src
   build-depends:
-      base >=4.7 && <5
+      aeson
+    , base >=4.7 && <5
   default-language: Haskell2010
 
 executable scoper-exe
   main-is: Main.hs
   other-modules:
+      Paths_scoper
   hs-source-dirs:
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -Werror
   build-depends:
-      base >=4.7 && <5
+      aeson
+    , base >=4.7 && <5
     , scoper
   default-language: Haskell2010
 
@@ -50,10 +54,12 @@ test-suite scoper-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Paths_scoper
   hs-source-dirs:
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      aeson
+    , base >=4.7 && <5
     , scoper
   default-language: Haskell2010
