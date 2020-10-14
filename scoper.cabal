@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f6d3fff70811b879b8d3dcb2e26e7eca2f1baf50fb553f5a0e1ab6b839b1f886
+-- hash: fc6f423476ce1b797562c0aeb09a0a95663bd12a70e3f6972a3a9f8f94207c85
 
 name:           scoper
 version:        0.1.0.0
@@ -28,6 +28,7 @@ source-repository head
 library
   exposed-modules:
       Lib
+      Types
   other-modules:
       Paths_scoper
   hs-source-dirs:
@@ -35,6 +36,7 @@ library
   build-depends:
       aeson
     , base >=4.7 && <5
+    , bytestring
   default-language: Haskell2010
 
 executable scoper-exe
@@ -43,10 +45,11 @@ executable scoper-exe
       Paths_scoper
   hs-source-dirs:
       app
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Werror
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Werror -fwarn-incomplete-patterns
   build-depends:
       aeson
     , base >=4.7 && <5
+    , bytestring
     , scoper
   default-language: Haskell2010
 
@@ -61,5 +64,6 @@ test-suite scoper-test
   build-depends:
       aeson
     , base >=4.7 && <5
+    , bytestring
     , scoper
   default-language: Haskell2010

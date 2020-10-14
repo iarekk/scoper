@@ -1,35 +1,29 @@
 {
-    "total": {
-        "s": 1,
-        "e": 6,
-        "d": 5,
-        "children": [
-            {
-                "name": "database",
-                "s": 2,
-                "e": 5,
-                "d": 3,
-                "children": [
-                    {
-                        "name": "connect",
-                        "s": 2,
-                        "e": 3,
-                        "d": 1
-                    },
-                    {
-                        "name": "query",
-                        "s": 3,
-                        "e": 5,
-                        "d": 2
-                    }
-                ]
-            },
-            {
-                "name": "ui",
-                "s": 5,
-                "e": 6,
-                "d": 1
-            }
-        ]
-    }
+    "name": "total",
+    "s": 1,
+    "e": 6,
+    "c": [
+        {
+            "name": "database",
+            "s": 2,
+            "e": 5,
+            "c": [
+                {
+                    "name": "connect",
+                    "s": 2,
+                    "e": 3
+                },
+                {
+                    "name": "query",
+                    "s": 3,
+                    "e": 5
+                }
+            ]
+        },
+        {
+            "name": "ui",
+            "s": 5,
+            "e": 6
+        }
+    ]
 }
