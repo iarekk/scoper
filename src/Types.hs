@@ -18,12 +18,8 @@ data Scope = Scope
     , e       :: ScopeEnd
     , c       :: ScopeChildren
     } deriving (Generic, Show)
-instance ToJSON Scope where
-    toJSON (Scope n s e c) = object $ stripNulls ["name" .= n, "s" .= s, "e" .= e, "c" .= c]
+instance ToJSON Scope
 instance FromJSON Scope
-
-stripNulls :: [Pair] -> [Pair]
-stripNulls xs = filter (\(_,v) -> v /= Null) xs
 
 newtype RunOptions = RunOptions FilePath deriving Show
 
