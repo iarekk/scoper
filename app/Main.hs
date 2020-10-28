@@ -13,8 +13,3 @@ main = do
     scope <- readScope dataPath
     writeScope scope
 
--- 0. Transform the input file into a parse-able file.
--- 1. Parse the file into a Scope
--- 2. Transform the Scope into a render-able structure
--- 3. Generate the svg
-

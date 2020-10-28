@@ -25,7 +25,7 @@ instance FromJSON Scope
 stripNulls :: [Pair] -> [Pair]
 stripNulls xs = filter (\(_,v) -> v /= Null) xs
 
-data RunOptions = RunOptions FilePath deriving Show
+newtype RunOptions = RunOptions FilePath deriving Show
 
 
 -- s <- Data.ByteString.Lazy.readFile "data/tree-like.json" 
