@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: fc6f423476ce1b797562c0aeb09a0a95663bd12a70e3f6972a3a9f8f94207c85
+-- hash: b1b152883affae2ae567ef2c253bdb646b33954d5e8ebe5752f984297b2e0d36
 
 name:           scoper
 version:        0.1.0.0
@@ -27,7 +27,7 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
+      Parsers
       Types
   other-modules:
       Paths_scoper
@@ -37,6 +37,7 @@ library
       aeson
     , base >=4.7 && <5
     , bytestring
+    , optparse-applicative
   default-language: Haskell2010
 
 executable scoper-exe
@@ -50,6 +51,7 @@ executable scoper-exe
       aeson
     , base >=4.7 && <5
     , bytestring
+    , optparse-applicative
     , scoper
   default-language: Haskell2010
 
@@ -65,5 +67,6 @@ test-suite scoper-test
       aeson
     , base >=4.7 && <5
     , bytestring
+    , optparse-applicative
     , scoper
   default-language: Haskell2010
