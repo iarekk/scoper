@@ -1,11 +1,12 @@
 {-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE OverloadedStrings #-}
 
 module Types where
 
 import Data.Aeson
 import Data.Aeson.Types
 import GHC.Generics
+
+newtype RunOptions = RunOptions FilePath deriving Show
 
 type ScopeName = String
 type ScopeStart = Int
@@ -20,10 +21,3 @@ data Scope = Scope
     } deriving (Generic, Show)
 instance ToJSON Scope
 instance FromJSON Scope
-
-newtype RunOptions = RunOptions FilePath deriving Show
-
-
--- s <- Data.ByteString.Lazy.readFile "data/tree-like.json" 
--- let scope = Data.Aeson.decode s :: Maybe Scope
--- see this gist for skipping nulls: https://gist.github.com/alanz/2465584
