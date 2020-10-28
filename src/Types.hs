@@ -25,6 +25,9 @@ instance FromJSON Scope
 stripNulls :: [Pair] -> [Pair]
 stripNulls xs = filter (\(_,v) -> v /= Null) xs
 
+data RunOptions = RunOptions FilePath deriving Show
+
+
 -- s <- Data.ByteString.Lazy.readFile "data/tree-like.json" 
 -- let scope = Data.Aeson.decode s :: Maybe Scope
 -- see this gist for skipping nulls: https://gist.github.com/alanz/2465584
