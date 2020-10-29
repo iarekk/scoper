@@ -12,8 +12,5 @@ optionsParser :: Parser RunOptions
 optionsParser = RunOptions <$> dataPathParser
 
 dataPathParser :: Parser FilePath
-dataPathParser = strOption $
-    long "input-path"
-    <> short 'p'
-    <> metavar "INPUT_PATH"
-    <> help "path to input file"
+dataPathParser = strArgument $
+    metavar "INPUT_PATH" <> help "path to input file"
