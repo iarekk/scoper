@@ -6,7 +6,8 @@ import Data.Aeson
 import Data.Aeson.Types
 import GHC.Generics
 
-newtype RunOptions = RunOptions FilePath deriving Show
+newtype RunOptions = RunOptions InputType deriving Show
+data InputType = FromFile FilePath | FromStdIn deriving Show
 
 type ScopeName = String
 type ScopeStart = Int
