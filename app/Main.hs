@@ -8,8 +8,7 @@ import Types
 
 main :: IO ()
 main = do
-    RunOptions dataPath <- runParser
-    putStrLn $ "Reading file:" ++ dataPath
-    scope <- readScope dataPath
+    runOptions <- runParser
+    scope <- readScope runOptions
     writeScope scope
 

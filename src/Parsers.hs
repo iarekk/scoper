@@ -9,8 +9,13 @@ runParser :: IO RunOptions
 runParser = execParser (info optionsParser (progDesc "Run scope visualizer application"))
 
 optionsParser :: Parser RunOptions
-optionsParser = RunOptions <$> dataPathParser
+optionsParser = RunOptions <$> (fromFileParser <|> fromStdInParser)
 
-dataPathParser :: Parser FilePath
-dataPathParser = strArgument $
-    metavar "INPUT_PATH" <> help "path to input file"
+fromFileParser :: Parser InputType
+fromFileParser = FromFile <$> strArgument (metavar "INPUT_PATH" <> help "path to input file")
+
+fromStdInParser :: Parser InputType
+fromStdInParser = flag' FromStdIn $
+    long "stdin"
+    <> short 's'
+    <> help "Read from stdin"
