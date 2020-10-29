@@ -6,13 +6,21 @@ import Data.Aeson
 import Data.Aeson.Types
 import GHC.Generics
 
-newtype RunOptions = RunOptions InputType deriving Show
-data InputType = FromFile FilePath | FromStdIn deriving Show
+newtype RunOptions =
+    RunOptions InputType
+    deriving Show
 
-type ScopeName = String
-type ScopeStart = Int
-type ScopeEnd = Int
-type ScopeChildren = Maybe [Scope]
+data InputType 
+    = FromFile FilePath 
+    | FromStdIn
+    deriving Show
+
+type ScopeChildren  = Maybe [Scope]
+type ScopeEnd       = Int
+type ScopeHeight    = Int
+type ScopeName      = String
+type ScopeStart     = Int
+type ScopeTop       = Int
 
 data Scope = Scope
     { name    :: ScopeName
@@ -22,3 +30,12 @@ data Scope = Scope
     } deriving (Generic, Show)
 instance ToJSON Scope
 instance FromJSON Scope
+
+data RenderableScope = RenderableScope
+    { name      :: ScopeName
+    , start     :: ScopeStart
+    , end       :: ScopeEnd
+    , children  :: ScopeChildren
+    , height    :: ScopeHeight
+    , top       :: ScopeTop
+    } deriving (Generic, Show)
