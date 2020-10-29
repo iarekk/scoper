@@ -15,6 +15,7 @@ data InputType
     | FromStdIn
     deriving Show
 
+type RenderableScopeChildren  = Maybe [RenderableScope]
 type ScopeChildren  = Maybe [Scope]
 type ScopeEnd       = Int
 type ScopeHeight    = Int
@@ -32,10 +33,10 @@ instance ToJSON Scope
 instance FromJSON Scope
 
 data RenderableScope = RenderableScope
-    { name      :: ScopeName
+    { scopeName      :: ScopeName
     , start     :: ScopeStart
     , end       :: ScopeEnd
-    , children  :: ScopeChildren
+    , children  :: RenderableScopeChildren
     , height    :: ScopeHeight
     , top       :: ScopeTop
     } deriving (Generic, Show)
