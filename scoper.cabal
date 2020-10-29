@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 07689209f3937239c814c7b136f8cf835e1b10cdac35b5fa722a700eb2c3aa83
+-- hash: 6071cd94e9adb333dc19ec4e2a399209e6bd627f1ba7a845ba57b30250f10922
 
 name:           scoper
 version:        0.1.0.0
@@ -27,6 +27,7 @@ source-repository head
 
 library
   exposed-modules:
+      Converter
       Parsers
       Storage
       Types

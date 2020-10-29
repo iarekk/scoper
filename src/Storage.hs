@@ -10,7 +10,7 @@ import Types
 readScope :: RunOptions -> IO Scope
 readScope runOptions = do
     mbScope <-
-        catches (eitherDecode' <$> (getContent runOptions))
+        catches (eitherDecode' <$> getContent runOptions)
         [ 
           Handler(\ (e :: IOException) -> return $ Left "Problem reading file")
         , Handler(\ (e :: SomeException) -> return $ Left ("Another problem:" ++ show e))
