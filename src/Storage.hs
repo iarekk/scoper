@@ -1,6 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Storage(readScope, writeScope) where
+module Storage(readScope, writeScope, writeRenderableScope) where
 
 import Control.Exception
 import Data.Aeson
@@ -25,4 +25,8 @@ getContent (RunOptions FromStdIn) = BS.getContents
 
 writeScope :: Scope -> IO ()
 writeScope scope = BS.putStrLn $ Data.Aeson.encode scope
+
+writeRenderableScope :: RenderableScope -> IO ()
+writeRenderableScope rscope = BS.putStrLn $ Data.Aeson.encode rscope
+
 

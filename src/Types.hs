@@ -40,3 +40,22 @@ data RenderableScope = RenderableScope
     , height    :: ScopeHeight
     , top       :: ScopeTop
     } deriving (Generic, Show)
+instance ToJSON RenderableScope
+
+data Scp = Scp
+    { nm       :: ScopeName
+    , ss       :: ScopeStart
+    , se       :: ScopeEnd
+    } deriving (Generic, Show)
+instance ToJSON Scp
+--instance FromJSON Scp
+
+data NTree a = Node
+    { value:: a
+    , childNodes :: [NTree a]
+    }
+    deriving (Generic, Show)
+--instance ToJSON NTree
+instance ToJSON a => ToJSON (NTree a)
+--instance Show a => Show (NTree a)
+
