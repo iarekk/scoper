@@ -1,14 +1,12 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 module Main(main) where
 
+import Converter(preRender)
 import Parsers(runParser)
-import Storage(readScope, writeScope)
-import Types
+import Storage(readScope, writeRenderableScope)
 
 main :: IO ()
 main = do
     runOptions <- runParser
     scope <- readScope runOptions
-    writeScope scope
+    writeRenderableScope $ preRender scope
 
