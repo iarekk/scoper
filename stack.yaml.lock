@@ -3,7 +3,21 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/lock_files
 
-packages: []
+packages:
+- completed:
+    hackage: blank-canvas-0.7.3@sha256:575c5e27632ce1e73cdc3bac00c520df4f3eeb400d26121ba30e66814af8234a,5093
+    pantry-tree:
+      size: 1495
+      sha256: 2b85e8588e98c8b2a04061c5a1cdda1e987ef31d8a3e21b18357e4de26c3e389
+  original:
+    hackage: blank-canvas-0.7.3@sha256:575c5e27632ce1e73cdc3bac00c520df4f3eeb400d26121ba30e66814af8234a,5093
+- completed:
+    hackage: kansas-comet-0.4@sha256:72330f1953abed85fc306ace742d975296a3b3a806c9db90dc793161b60c2846,1737
+    pantry-tree:
+      size: 383
+      sha256: b93fb744a9979ae6e8638a02711f9222cfd1d0d7d8559a188ba8d87f80ec9313
+  original:
+    hackage: kansas-comet-0.4@sha256:72330f1953abed85fc306ace742d975296a3b3a806c9db90dc793161b60c2846
 snapshots:
 - completed:
     size: 532172
