@@ -17,6 +17,14 @@ jobs:
       with:
         enable-stack: true
         stack-version: 'latest'
+    - name: Cache stack global package db
+      id:   stack-global
+      uses: actions/cache@v2
+      with:
+        path: ~/.stack
+        key: ${{ runner.os }}-stack-global-${{ hashFiles('**.yaml') }}
+        restore-keys: |
+             ${{ runner.os }}-stack-global-
     - name: Cache .stack-work
       uses: actions/cache@v2
       with:
