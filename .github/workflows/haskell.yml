@@ -33,4 +33,4 @@ jobs:
         restore-keys: |
              ${{ runner.os }}-stack-work-
     - name: Build
-      run: stack build
+      run: stack build --test
