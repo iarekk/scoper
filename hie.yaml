@@ -1,0 +1,13 @@
+cradle:
+  stack:
+    - path: "./src"
+      component: "scoper:lib"
+
+    - path: "./app/Main.hs"
+      component: "scoper:exe:scoper-exe"
+
+    - path: "./app/Paths_scoper.hs"
+      component: "scoper:exe:scoper-exe"
+
+    - path: "./test"
+      component: "scoper:test:scoper-test"
