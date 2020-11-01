@@ -15,7 +15,7 @@ data InputType
     | FromStdIn
     deriving Show
 
-type RenderableScopeChildren  = Maybe [RenderableScope]
+type RenderableScopeChildren  = [RenderableScope]
 type ScopeChildren  = Maybe [Scope]
 type ScopeEnd       = Int
 type ScopeHeight    = Int
