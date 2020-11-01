@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 6071cd94e9adb333dc19ec4e2a399209e6bd627f1ba7a845ba57b30250f10922
+-- hash: 033a5ba44dcd8f00cc98622e0a4cca0a5c9433e6b60964c6c0fc99c64d9e2a9d
 
 name:           scoper
 version:        0.1.0.0
@@ -37,6 +37,7 @@ library
       src
   build-depends:
       aeson
+    , aeson-pretty
     , base >=4.7 && <5
     , bytestring
     , optparse-applicative
@@ -51,6 +52,7 @@ executable scoper-exe
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -Werror -fwarn-incomplete-patterns
   build-depends:
       aeson
+    , aeson-pretty
     , base >=4.7 && <5
     , bytestring
     , optparse-applicative
@@ -67,6 +69,7 @@ test-suite scoper-test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       aeson
+    , aeson-pretty
     , base >=4.7 && <5
     , bytestring
     , optparse-applicative
