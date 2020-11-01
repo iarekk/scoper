@@ -15,6 +15,7 @@ jobs:
     - uses: actions/setup-haskell@v1
       name: setup haskell
       with:
+        stack-no-global: true
         enable-stack: true
         stack-version: 'latest'
     - name: Cache stack global package db
@@ -33,4 +34,4 @@ jobs:
         restore-keys: |
              ${{ runner.os }}-stack-work-
     - name: Build
-      run: stack build
+      run: stack build --test
