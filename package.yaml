@@ -25,6 +25,7 @@ dependencies:
 - base >= 4.7 && < 5
 - blank-canvas
 - bytestring
+- colour
 - optparse-applicative
 - text
 

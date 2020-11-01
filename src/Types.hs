@@ -22,6 +22,7 @@ type ScopeHeight    = Int
 type ScopeName      = String
 type ScopeStart     = Int
 type ScopeTop       = Int
+type RenderableScopeColour = String 
 
 data Scope = Scope
     { name    :: ScopeName
@@ -33,12 +34,13 @@ instance ToJSON Scope
 instance FromJSON Scope
 
 data RenderableScope = RenderableScope
-    { scopeName      :: ScopeName
+    { scopeName :: ScopeName
     , start     :: ScopeStart
     , end       :: ScopeEnd
     , children  :: RenderableScopeChildren
     , height    :: ScopeHeight
     , top       :: ScopeTop
+    , colour    :: RenderableScopeColour
     } deriving (Generic, Show)
 instance ToJSON RenderableScope
 
