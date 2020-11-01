@@ -23,8 +23,10 @@ dependencies:
 - aeson
 - aeson-pretty
 - base >= 4.7 && < 5
+- blank-canvas
 - bytestring
 - optparse-applicative
+- text
 
 library:
   source-dirs: src
