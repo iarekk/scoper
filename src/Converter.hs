@@ -23,12 +23,12 @@ assignTops' :: ScopeTop -> RenderableScopeChildren -> RenderableScopeChildren
 assignTops' _ [] = []
 assignTops' prevTop (x:xs) = x':(assignTops' newTop xs)
     where
-        RenderableScope n s e c h t = x
-        x' = RenderableScope n s e (assignTops' prevTop c) h prevTop
+        RenderableScope n s e c h _ = x
+        x' = RenderableScope n s e (assignTops' (prevTop+1) c) h (prevTop+1)
         newTop = prevTop + h
 
 getChildHeights :: ScopeChildren -> ScopeHeight
 getChildHeights Nothing = 1
-getChildHeights (Just xs) = sum $ map getHeight xs
+getChildHeights (Just xs) = 1 + (sum $ map getHeight xs)
     where
         getHeight (Scope _ _ _ c) = getChildHeights c
