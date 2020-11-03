@@ -2,10 +2,10 @@
 
 module Renderer(renderScope) where
 import Graphics.Blank
+import qualified Data.Colour.SRGB as DCS
+import qualified Data.Text as T
 import qualified Graphics.Blank.Style as GBS
 import Types ( RenderableScope(RenderableScope) )
-import qualified Data.Text as T
-import qualified Data.Colour.SRGB as DCS
 
 renderScope :: RenderableScope -> Canvas()
 renderScope (RenderableScope n s e c h t col) = do
@@ -19,7 +19,7 @@ renderScope (RenderableScope n s e c h t col) = do
     let he = fromIntegral h * rowHeight
 
     beginPath()
-    rect(x, y, w , he)
+    rect(x, y, w, he)
     GBS.fillStyle $ ((DCS.sRGB24read $ col) :: DCS.Colour Double)
     fill()
     mapM (renderScope) c
