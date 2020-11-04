@@ -44,16 +44,12 @@ data RenderableScope = RenderableScope
     } deriving (Generic, Show)
 instance ToJSON RenderableScope
 
-data NTree a = Node a [NTree a]
+data NT a = N a [NT a]
     deriving (Show, Functor, Foldable, Traversable)
 
--- t = Node 'a' [Node 'b' [Node 'c' [] ], Node 'd' []]
--- t1 = Node "a" [Node "b" [Node "c" [] ], Node "d" []]
--- t = Node 'a' [Node 'b' [], Node 'c' []]
-
--- data Inorder a = ILeaf
---                | INode (Inorder a) a (Inorder a)  -- as before
---                deriving (Functor, Foldable, Traversable)  -- also using DeriveFunctor and DeriveFoldable
+-- t = N 'a' [N 'b' [N 'c' [] ], N 'd' []]
+-- t1 = N "a" [N "b" [N "c" [] ], N "d" []]
+-- t = N 'a' [N 'b' [], N 'c' []]
 
 data Preorder a = PrNode a [Preorder a]
                 deriving (Functor, Foldable, Traversable)
@@ -61,15 +57,28 @@ data Preorder a = PrNode a [Preorder a]
 data Postorder a = PoNode [Postorder a] a
                  deriving (Functor, Foldable, Traversable)
 
--- injections from the earlier Tree type
--- inorder :: NTree a -> Inorder a
--- inorder Leaf = ILeaf
--- inorder (Node l x r) = INode (inorder l) x (inorder r)
+preorder :: NT a -> Preorder a
+preorder (N x cs) = PrNode x (map preorder cs)
 
-preorder :: NTree a -> Preorder a
---preorder Leaf = PrLeaf
-preorder (Node x cs) = PrNode x (map preorder cs)
+postorder :: NT a -> Postorder a
+postorder (N x cs) = PoNode (map postorder cs) x
 
-postorder :: NTree a -> Postorder a
---postorder Leaf = PoLeaf
-postorder (Node x cs) = PoNode (map postorder cs) x
+numberNodes :: NT a -> NT (a, Int)
+numberNodes t = ti where
+    (ti, _) = numberTree t 0
+
+numberElem :: a -> Int -> ((a, Int), Int)
+numberElem x i = ((x, i), i + 1)
+
+numberTree :: (NT a) -> Int -> (NT (a, Int), Int)
+numberTree (N x xs) i = (N xi xis, i2) where
+        (xi, i1) = numberElem x i
+        (xis, i2) = numberTrees xs i1
+
+numberTrees :: [NT a] -> Int -> ([NT (a, Int)], Int)
+numberTrees [] i = ([], i)
+numberTrees (t:ts) i = (ti:tis, i2) where
+    (ti, i1) = numberTree t i
+    (tis, i2) = numberTrees ts i1
+
+
