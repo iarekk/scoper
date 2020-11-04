@@ -63,22 +63,31 @@ preorder (N x cs) = PrNode x (map preorder cs)
 postorder :: NT a -> Postorder a
 postorder (N x cs) = PoNode (map postorder cs) x
 
+type Numbering output = Int -> (output, Int)
+
 numberNodes :: NT a -> NT (a, Int)
 numberNodes t = ti where
     (ti, _) = numberTree t 0
 
-numberElem :: a -> Int -> ((a, Int), Int)
-numberElem x i = ((x, i), i + 1)
+numberElem :: a -> Numbering (a, Int)
+numberElem x i = (steady x i, i + 1)
 
-numberTree :: (NT a) -> Int -> (NT (a, Int), Int)
+numberTree :: (NT a) -> Numbering (NT (a, Int))
 numberTree (N x xs) i = (N xi xis, i2) where
         (xi, i1) = numberElem x i
         (xis, i2) = numberTrees xs i1
 
-numberTrees :: [NT a] -> Int -> ([NT (a, Int)], Int)
-numberTrees [] i = ([], i)
+numberTrees :: [NT a] -> Numbering [NT (a, Int)]
+numberTrees [] i = steady [] i
 numberTrees (t:ts) i = (ti:tis, i2) where
     (ti, i1) = numberTree t i
     (tis, i2) = numberTrees ts i1
 
+steady :: a -> Numbering a
+steady x i = (x, i)
 
+($$) :: Numbering (a -> b) -> Numbering a -> Numbering b
+infixl 2 $$
+(fn $$ an) i0 = (f a, i2) where
+  (f, i1) = fn i0
+  (a, i2) = an i1
