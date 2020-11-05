@@ -91,3 +91,16 @@ infixl 2 $$
 (fn $$ an) i0 = (f a, i2) where
   (f, i1) = fn i0
   (a, i2) = an i1
+
+next :: Numbering Int
+next i = (i, i+1)
+
+numberElemSteady :: a -> Numbering (a,Int)
+numberElemSteady a i = (steady ((,) a) $$ next) i
+
+numberTreeSteady :: NT a -> Numbering (NT (a, Int))
+numberTreeSteady (N x ts) i = (steady N $$ numberElemSteady x $$ numberTreesSteady ts) i
+
+numberTreesSteady :: [NT a] -> Numbering [NT (a, Int)]
+numberTreesSteady [] i = steady [] i
+numberTreesSteady (t:ts) i = (steady (:) $$ numberTreeSteady t $$ numberTreesSteady ts ) i
