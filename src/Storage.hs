@@ -1,10 +1,10 @@
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
 module Storage(readScope, writeScope, writeRenderableScope) where
 
 import Control.Exception
 import Data.Aeson
-import Data.Aeson.Encode.Pretty(encodePretty)
 import qualified Data.ByteString.Lazy.Char8 as BS
 import Types
 
@@ -28,6 +28,6 @@ writeScope :: Scope -> IO ()
 writeScope scope = BS.putStrLn $ Data.Aeson.encode scope
 
 writeRenderableScope :: RenderableScope -> IO ()
-writeRenderableScope rscope = BS.putStrLn $ encodePretty rscope
+writeRenderableScope = print
 
 
