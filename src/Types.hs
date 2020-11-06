@@ -3,7 +3,9 @@
 
 module Types where
 
-import           Data.Aeson
+import           Data.Aeson       (FromJSON, ToJSON)
+import           Data.Traversable
+import           Data.Tuple
 import           GHC.Generics
 
 newtype RunOptions =
@@ -104,3 +106,12 @@ numberTreeSteady (N x ts) i = (steady N $$ numberElemSteady x $$ numberTreesStea
 numberTreesSteady :: [NT a] -> Numbering [NT (a, Int)]
 numberTreesSteady [] i = steady [] i
 numberTreesSteady (t:ts) i = (steady (:) $$ numberTreeSteady t $$ numberTreesSteady ts ) i
+
+numberTreeSimple :: (NT a) -> Numbering (NT (a, Int))
+numberTreeSimple t n = swap $ mapAccumL func n t
+    where
+        func i x = (i+1, (x, i))
+
+-- func = \i x -> (i+1, (x,i))
+
+-- snd $ mapAccumL func 0 t1
