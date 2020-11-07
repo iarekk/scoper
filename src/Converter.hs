@@ -8,7 +8,7 @@ preRender scope = fmap toRender treeWithColours
     where
         scopeTree = toTree scope
         treeWithHeights = getHeight scopeTree
-        treeWithTops = getTops treeWithHeights
+        treeWithTops = getTops treeWithHeights 0
         treeWithColours = getColours treeWithTops chartColours
 
         --(Scope n s e c) = scope
@@ -32,9 +32,16 @@ addChildHeights [] = 1
 addChildHeights (t:ts) = h + addChildHeights ts where
     N (_,h) _ = t
 
-getTops :: NT (ScopeData, ScopeHeight) -> NT (ScopeData, ScopeHeight, ScopeTop)
-getTops t = snd $ DT.mapAccumL f 0 t where
+getTops :: NT (ScopeData, ScopeHeight) -> ScopeTop -> NT (ScopeData, ScopeHeight, ScopeTop)
+getTops t st = snd $ DT.mapAccumL f st t where
     f top (sd, h) = (top+h, (sd, h, top))
+
+-- getTops' :: NT (ScopeData, ScopeHeight) -> ScopeTop -> NT (ScopeData, ScopeHeight, ScopeTop)
+-- getTops' t curTop = N (sd, h, curTop) nts
+--     where 
+--         N (sd, h) ts = t
+--         newTop = curTop + h
+
 
 getColours :: NT (ScopeData, ScopeHeight, ScopeTop) -> [ScopeColour] -> NT (ScopeData, ScopeHeight, ScopeTop, ScopeColour)
 getColours t cols = snd $ DT.mapAccumL f cols t where
