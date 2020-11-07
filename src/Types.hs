@@ -16,14 +16,13 @@ data InputType
     | FromStdIn
     deriving Show
 
-type RenderableScopeChildren  = [RenderableScope]
 type ScopeChildren  = Maybe [Scope]
 type ScopeEnd       = Int
 type ScopeHeight    = Int
 type ScopeName      = String
 type ScopeStart     = Int
 type ScopeTop       = Int
-type RenderableScopeColour = String
+type ScopeColour = String
 
 data Scope = Scope
     { name :: ScopeName
@@ -34,14 +33,11 @@ data Scope = Scope
 instance ToJSON Scope
 instance FromJSON Scope
 
-data RenderableScope = RenderableScope
-    ScopeName
-    ScopeStart
-    ScopeEnd
-    RenderableScopeChildren
+data RenderableScopeData = RenderableScopeData
+    ScopeData
     ScopeHeight
     ScopeTop
-    RenderableScopeColour
+    ScopeColour
     deriving (Show)
 
 data ScopeData = ScopeData
@@ -50,8 +46,8 @@ data ScopeData = ScopeData
     ScopeEnd
     deriving (Show)
 
-type ScopeTree = NT ScopeData
---type RenderableScope = NT RenderableScopeData
+--type ScopeTree = NT ScopeData
+type RenderableScope = NT RenderableScopeData
 
 data NT a = N a [NT a]
     deriving (Show, Functor, Traversable, Foldable)

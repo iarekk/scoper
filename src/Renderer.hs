@@ -5,10 +5,10 @@ import Graphics.Blank
 import qualified Data.Colour.SRGB as DCS
 import qualified Data.Text as T
 import qualified Graphics.Blank.Style as GBS
-import Types ( RenderableScope(RenderableScope) )
+import Types
 
 renderScope :: RenderableScope -> Canvas()
-renderScope (RenderableScope n s e c h t col) = do
+renderScope (N (RenderableScopeData (ScopeData n s e) h t col) cs) = do
     let rowHeight = 50
     let millisecondToPxRatio = 100
     let topMargin = 20
@@ -20,9 +20,9 @@ renderScope (RenderableScope n s e c h t col) = do
 
     beginPath()
     rect(x, y, w, he)
-    GBS.fillStyle $ ((DCS.sRGB24read $ col) :: DCS.Colour Double)
+    GBS.fillStyle (DCS.sRGB24read col :: DCS.Colour Double)
     fill()
-    mapM (renderScope) c
+    mapM_ renderScope cs
     font "20pt Calibri"
     fillStyle "black"
     textBaseline middle
