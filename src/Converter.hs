@@ -18,12 +18,13 @@ mapList (Just xs) = xs
 getHeight :: NT ScopeData -> NT (ScopeData, ScopeHeight)
 getHeight (N sd ts) = N (sd, chs) nts where
     nts = map getHeight ts
-    chs = 1 + addChildHeights nts
+    chs = 1 + (sum $ map gh nts)
+    gh (N (_,h) _) = h
 
-addChildHeights :: [NT (ScopeData, ScopeHeight)] -> ScopeHeight
-addChildHeights [] = 0
-addChildHeights (t:ts) = h + addChildHeights ts where
-    N (_,h) _ = t
+-- addChildHeights :: [NT (ScopeData, ScopeHeight)] -> ScopeHeight
+-- addChildHeights [] = 0
+-- addChildHeights (t:ts) = h + addChildHeights ts where
+--     N (_,h) _ = t
 
 getTops :: NT (ScopeData, ScopeHeight) -> ScopeTop -> NT (ScopeData, ScopeHeight, ScopeTop)
 getTops t st = snd $ mapAccumL f st t where
