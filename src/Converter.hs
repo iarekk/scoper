@@ -39,6 +39,7 @@ getTops t = snd $ DT.mapAccumL f 0 t where
 getColours :: NT (ScopeData, ScopeHeight, ScopeTop) -> [ScopeColour] -> NT (ScopeData, ScopeHeight, ScopeTop, ScopeColour)
 getColours t cols = snd $ DT.mapAccumL f cols t where
     f (c:cs) (sd, h, top) = (cs, (sd, h, top, c))
+    f [] _ = error "colours are meant to be infinite"
 
 
 
