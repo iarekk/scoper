@@ -1,28 +1,48 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Renderer(renderScope) where
-import Graphics.Blank
-import qualified Data.Colour.SRGB as DCS
-import qualified Data.Text as T
+module Renderer(drawDiagram) where
+import qualified Data.Colour.SRGB     as DCS
+import qualified Data.Text            as T
+import           Graphics.Blank
 import qualified Graphics.Blank.Style as GBS
-import Types
+import           Types
 
-renderScope :: RenderableScope -> Canvas()
-renderScope (N (RenderableScopeData (ScopeData n s e) h t col) cs) = do
-    let rowHeight = 50
-    let millisecondToPxRatio = 100
-    let topMargin = 20
-    let leftMargin = 20
+rowHeight = 50
+topMargin = 20
+leftMargin = 20
+maxHeight = 1000
+maxWidth = 1000
+
+drawDiagram :: RenderableScope -> Canvas()
+drawDiagram rScope = do
+    lineWidth 1
+    strokeStyle "black"
+    moveTo(leftMargin, topMargin)
+    lineTo(leftMargin + maxWidth, topMargin)
+    stroke()
+    moveTo(leftMargin, topMargin)
+    lineTo(leftMargin, topMargin + maxHeight)
+    stroke()
+    renderScope (getDrawingMetadata rScope) rScope
+
+getDrawingMetadata :: RenderableScope -> DrawingMetadata
+getDrawingMetadata t = DrawingMetadata ratio where
+    ratio = maxWidth / (fromIntegral maxEnd)
+    getEnds = fmap (\ ((RenderableScopeData (ScopeData _ _ e) _ _ _)) -> e) t
+    maxEnd = maximum getEnds
+
+renderScope :: DrawingMetadata -> RenderableScope -> Canvas()
+renderScope metaData (N (RenderableScopeData (ScopeData n s e) h t col) cs) = do
+    let (DrawingMetadata millisecondToPxRatio) = metaData
     let x = fromIntegral s * millisecondToPxRatio + leftMargin
     let y = fromIntegral t * rowHeight + topMargin
     let w = fromIntegral (e-s) * millisecondToPxRatio
     let he = fromIntegral h * rowHeight
 
     beginPath()
-    rect(x, y, w, he)
     GBS.fillStyle (DCS.sRGB24read col :: DCS.Colour Double)
-    fill()
-    mapM_ renderScope cs
+    fillRect(x, y, w, he)
+    mapM_ (renderScope metaData) cs
     font "20pt Calibri"
     fillStyle "black"
     textBaseline middle

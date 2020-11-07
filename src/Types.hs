@@ -16,13 +16,20 @@ data InputType
     | FromStdIn
     deriving Show
 
-type ScopeChildren  = Maybe [Scope]
-type ScopeEnd       = Int
-type ScopeHeight    = Int
-type ScopeName      = String
-type ScopeStart     = Int
-type ScopeTop       = Int
-type ScopeColour = String
+data NT a = N a [NT a]
+    deriving (Show, Functor, Traversable, Foldable)
+
+type MillisecondsToPxRatio = Double
+type RenderableScope       = NT RenderableScopeData
+type ScopeChildren         = Maybe [Scope]
+type ScopeColour           = String
+type ScopeEnd              = Int
+type ScopeHeight           = Int
+type ScopeName             = String
+type ScopeStart            = Int
+type ScopeTop              = Int
+
+data DrawingMetadata = DrawingMetadata MillisecondsToPxRatio
 
 data Scope = Scope
     { name :: ScopeName
@@ -45,10 +52,3 @@ data ScopeData = ScopeData
     ScopeStart
     ScopeEnd
     deriving (Show)
-
---type ScopeTree = NT ScopeData
-type RenderableScope = NT RenderableScopeData
-
-data NT a = N a [NT a]
-    deriving (Show, Functor, Traversable, Foldable)
-

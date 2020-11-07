@@ -1,6 +1,6 @@
 module Converter (preRender) where
 
-import Data.Traversable(mapAccumL)
+import           Data.Traversable (mapAccumL)
 import           Types
 
 preRender :: Scope -> RenderableScope
@@ -18,10 +18,10 @@ mapList (Just xs) = xs
 getHeight :: NT ScopeData -> NT (ScopeData, ScopeHeight)
 getHeight (N sd ts) = N (sd, chs) nts where
     nts = map getHeight ts
-    chs = addChildHeights nts
+    chs = 1 + addChildHeights nts
 
 addChildHeights :: [NT (ScopeData, ScopeHeight)] -> ScopeHeight
-addChildHeights [] = 1
+addChildHeights [] = 0
 addChildHeights (t:ts) = h + addChildHeights ts where
     N (_,h) _ = t
 
@@ -32,7 +32,7 @@ getTops t st = snd $ mapAccumL f st t where
 getColours :: NT (ScopeData, ScopeHeight, ScopeTop) -> [ScopeColour] -> NT (ScopeData, ScopeHeight, ScopeTop, ScopeColour)
 getColours t cols = snd $ mapAccumL f cols t where
     f (c:cs) (sd, h, top) = (cs, (sd, h, top, c))
-    f [] _ = error "colours are meant to be infinite"
+    f [] _                = error "colours are meant to be infinite"
 
 chartColours :: [ScopeColour]
 chartColours = cycle ["#3366cc","#dc3912","#ff9900","#109618","#990099","#0099c6","#dd4477","#66aa00","#b82e2e","#316395","#994499","#22aa99","#aaaa11","#6633cc","#e67300","#8b0707","#651067","#329262","#5574a6","#3b3eac","#b77322","#16d620","#b91383","#f4359e","#9c5935","#a9c413","#2a778d","#668d1c","#bea413","#0c5922","#743411"]
