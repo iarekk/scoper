@@ -21,11 +21,6 @@ getHeight (N sd ts) = N (sd, chs) nts where
     chs = 1 + (sum $ map gh nts)
     gh (N (_,h) _) = h
 
--- addChildHeights :: [NT (ScopeData, ScopeHeight)] -> ScopeHeight
--- addChildHeights [] = 0
--- addChildHeights (t:ts) = h + addChildHeights ts where
---     N (_,h) _ = t
-
 getTops :: NT (ScopeData, ScopeHeight) -> ScopeTop -> NT (ScopeData, ScopeHeight, ScopeTop)
 getTops t st = snd $ mapAccumL f st t where
     f top (sd, h) = (top+1, (sd, h, top))
