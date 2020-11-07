@@ -1,63 +1,54 @@
-{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveFunctor     #-}
+{-# LANGUAGE DeriveGeneric     #-}
+{-# LANGUAGE DeriveTraversable #-}
 
 module Types where
 
-import Data.Aeson
-import Data.Aeson.Types
-import GHC.Generics
+import           Data.Aeson
+import           GHC.Generics
 
 newtype RunOptions =
     RunOptions InputType
     deriving Show
 
-data InputType 
-    = FromFile FilePath 
+data InputType
+    = FromFile FilePath
     | FromStdIn
     deriving Show
 
-type RenderableScopeChildren  = [RenderableScope]
 type ScopeChildren  = Maybe [Scope]
 type ScopeEnd       = Int
 type ScopeHeight    = Int
 type ScopeName      = String
 type ScopeStart     = Int
 type ScopeTop       = Int
-type RenderableScopeColour = String 
+type ScopeColour = String
 
 data Scope = Scope
-    { name    :: ScopeName
-    , s       :: ScopeStart
-    , e       :: ScopeEnd
-    , c       :: ScopeChildren
+    { name :: ScopeName
+    , s    :: ScopeStart
+    , e    :: ScopeEnd
+    , c    :: ScopeChildren
     } deriving (Generic, Show)
 instance ToJSON Scope
 instance FromJSON Scope
 
-data RenderableScope = RenderableScope
-    { scopeName :: ScopeName
-    , start     :: ScopeStart
-    , end       :: ScopeEnd
-    , children  :: RenderableScopeChildren
-    , height    :: ScopeHeight
-    , top       :: ScopeTop
-    , colour    :: RenderableScopeColour
-    } deriving (Generic, Show)
-instance ToJSON RenderableScope
+data RenderableScopeData = RenderableScopeData
+    ScopeData
+    ScopeHeight
+    ScopeTop
+    ScopeColour
+    deriving (Show)
 
-data Scp = Scp
-    { nm       :: ScopeName
-    , ss       :: ScopeStart
-    , se       :: ScopeEnd
-    } deriving (Generic, Show)
-instance ToJSON Scp
---instance FromJSON Scp
+data ScopeData = ScopeData
+    ScopeName
+    ScopeStart
+    ScopeEnd
+    deriving (Show)
 
-data NTree a = Node
-    { value:: a
-    , childNodes :: [NTree a]
-    }
-    deriving (Generic, Show)
---instance ToJSON NTree
-instance ToJSON a => ToJSON (NTree a)
---instance Show a => Show (NTree a)
+--type ScopeTree = NT ScopeData
+type RenderableScope = NT RenderableScopeData
+
+data NT a = N a [NT a]
+    deriving (Show, Functor, Traversable, Foldable)
 
