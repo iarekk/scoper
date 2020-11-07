@@ -34,7 +34,7 @@ addChildHeights (t:ts) = h + addChildHeights ts where
 
 getTops :: NT (ScopeData, ScopeHeight) -> ScopeTop -> NT (ScopeData, ScopeHeight, ScopeTop)
 getTops t st = snd $ DT.mapAccumL f st t where
-    f top (sd, h) = (top+h, (sd, h, top))
+    f top (sd, h) = (top+1, (sd, h, top))
 
 -- getTops' :: NT (ScopeData, ScopeHeight) -> ScopeTop -> NT (ScopeData, ScopeHeight, ScopeTop)
 -- getTops' t curTop = N (sd, h, curTop) nts
@@ -90,7 +90,7 @@ getColours t cols = snd $ DT.mapAccumL f cols t where
 
 
 chartColours :: [ScopeColour]
-chartColours = cycle ["#3366cc","#dc3912","#ff9900","#109618","#990099","#0099c6","#dd4477","#66aa00","#b82e2e","#316395","#3366cc","#994499","#22aa99","#aaaa11","#6633cc","#e67300","#8b0707","#651067","#329262","#5574a6","#3b3eac","#b77322","#16d620","#b91383","#f4359e","#9c5935","#a9c413","#2a778d","#668d1c","#bea413","#0c5922","#743411"]
+chartColours = cycle ["#3366cc","#dc3912","#ff9900","#109618","#990099","#0099c6","#dd4477","#66aa00","#b82e2e","#316395","#994499","#22aa99","#aaaa11","#6633cc","#e67300","#8b0707","#651067","#329262","#5574a6","#3b3eac","#b77322","#16d620","#b91383","#f4359e","#9c5935","#a9c413","#2a778d","#668d1c","#bea413","#0c5922","#743411"]
 
 toTree :: Scope -> NT ScopeData
 toTree (Scope n s e c) = N (ScopeData n s e) (map toTree (mapList c))
