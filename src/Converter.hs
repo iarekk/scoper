@@ -36,57 +36,10 @@ getTops :: NT (ScopeData, ScopeHeight) -> ScopeTop -> NT (ScopeData, ScopeHeight
 getTops t st = snd $ DT.mapAccumL f st t where
     f top (sd, h) = (top+1, (sd, h, top))
 
--- getTops' :: NT (ScopeData, ScopeHeight) -> ScopeTop -> NT (ScopeData, ScopeHeight, ScopeTop)
--- getTops' t curTop = N (sd, h, curTop) nts
---     where 
---         N (sd, h) ts = t
---         newTop = curTop + h
-
-
 getColours :: NT (ScopeData, ScopeHeight, ScopeTop) -> [ScopeColour] -> NT (ScopeData, ScopeHeight, ScopeTop, ScopeColour)
 getColours t cols = snd $ DT.mapAccumL f cols t where
     f (c:cs) (sd, h, top) = (cs, (sd, h, top, c))
     f [] _ = error "colours are meant to be infinite"
-
-
-
---getHeight t ts 
-    -- map getHeight where
-    -- getHeight (N t c) = N (t, 0)
-    -- --getHeight (N _ xs) = undefined
-
--- assignColours :: RenderableScope -> [RenderableScopeColour] -> RenderableScope
--- assignColours (RenderableScope n s e c h t _) (col:cs) = RenderableScope n s e newChildren h t col
---     where
---         newChildren = colourTheChildren c cs
-
--- colourTheChildren :: RenderableScopeChildren -> [RenderableScopeColour] -> RenderableScopeChildren
--- colourTheChildren [] _ = []
--- colourTheChildren (ch:chs) (col:cls) = c':(colourTheChildren chs cls)
---     where
---         RenderableScope n s e c h t _ = ch
---         c' = RenderableScope n s e (colourTheChildren c cls) h t col
-
--- assignTops :: RenderableScope -> RenderableScope
--- assignTops rScope = newScope
---     where
---         RenderableScope n s e c h t _ = rScope
---         newScope = RenderableScope n s e newChildren h t ""
---         newChildren = assignTops' t c
-
--- assignTops' :: ScopeTop -> RenderableScopeChildren -> RenderableScopeChildren
--- assignTops' _ [] = []
--- assignTops' prevTop (x:xs) = x': assignTops' newTop xs
---     where
---         RenderableScope n s e c h _ _ = x
---         x' = RenderableScope n s e (assignTops' (prevTop+1) c) h (prevTop+1) ""
---         newTop = prevTop + h
-
--- getChildHeights :: ScopeChildren -> ScopeHeight
--- getChildHeights Nothing = 1
--- getChildHeights (Just xs) = 1 + sum (map getHeight xs)
---     where
---         getHeight (Scope _ _ _ c) = getChildHeights c
 
 
 chartColours :: [ScopeColour]
