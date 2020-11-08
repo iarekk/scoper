@@ -26,7 +26,10 @@ dependencies:
 - bytestring
 - colour
 - optparse-applicative
+- scientific
 - text
+- unordered-containers
+
 
 library:
   source-dirs: src
