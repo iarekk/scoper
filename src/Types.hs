@@ -28,6 +28,7 @@ type ScopeHeight           = Int
 type ScopeName             = String
 type ScopeStart            = Int
 type ScopeTop              = Int
+type ScopeTree             = NT ScopeData
 
 data DrawingMetadata = DrawingMetadata MillisecondsToPxRatio
 
