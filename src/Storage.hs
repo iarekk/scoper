@@ -1,17 +1,18 @@
 {-# LANGUAGE OverloadedStrings   #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Storage(readScope, writeScope, writeRenderableScope, parseScopeTree, getValueTree, parseValue, testv) where
+module Storage(readScope, writeScope, writeRenderableScope, parseScopeTree, getValueTree, parseValue, parseValueTree, testv, getTotal, toScopeTree) where
 
 import           Control.Exception
 import           Data.Aeson
 import qualified Data.ByteString.Lazy.Char8 as BS
 import qualified Data.HashMap.Strict        as HM
 import           Data.Scientific
+import           Data.Text(Text, unpack)
 import           Types                      (InputType (FromFile, FromStdIn),
-                                             RenderableScope, RunOptions (..),
-                                             Scope, ScopeData (ScopeData),
-                                             ScopeTree)
+                                             NT (..), RenderableScope,
+                                             RunOptions (..), Scope,
+                                             ScopeData (ScopeData), ScopeTree)
 
 readScope :: RunOptions -> IO Scope
 readScope runOptions = do
@@ -41,12 +42,27 @@ parseScopeTree = undefined
 getValueTree :: BS.ByteString -> Maybe Value
 getValueTree s = decode s
 
-parseValue :: Value -> (Maybe String) -> Maybe ScopeData
-parseValue (Object hm) n = sd where
+parseValue :: Object -> Text -> Maybe ScopeData
+parseValue hm n = sd where
     e = getNumber (HM.lookup "e" hm)
     s = getNumber (HM.lookup "s" hm)
-    sd = ScopeData <$> n <*> s <*> e
-parseValue _ _ = Nothing
+    sd = ScopeData (unpack n) <$> s <*> e
+
+parseValueTree :: (Text, Value) -> NT (Maybe ScopeData)
+parseValueTree (s, Object o) = N (parseValue o s) chd where
+  chd = map parseValueTree (HM.toList o)
+parseValueTree (_,_) = N Nothing []
+
+toScopeTree :: NT (Maybe ScopeData) -> ScopeTree
+toScopeTree (N (Just sd) ts) = N sd ts' where
+  ts' = map toScopeTree (filter isSomething ts)
+toScopeTree _ = error "Don't call me on Nothing"
+
+isSomething :: NT (Maybe ScopeData) -> Bool
+isSomething (N Nothing _) = False
+isSomething _ = True
+
+
 
 getNumber :: Maybe Value -> Maybe Int
 getNumber (Just (Number sc)) = toBoundedInteger sc
@@ -56,13 +72,6 @@ testv =
     ( Object
         ( HM.fromList
             [
-              ( "e"
-                , Number 550.0
-                )
-                ,
-                ( "s"
-                , Number 500.0
-                ),
                 ( "analytics"
                 , Object
                     ( HM.fromList
@@ -78,7 +87,12 @@ testv =
                     )
                 )
             ,
-                ( "total"
+            getTotal
+            ]
+        )
+    )
+
+getTotal = ( "total"
                 , Object
                     ( HM.fromList
                         [
@@ -152,6 +166,3 @@ testv =
                         ]
                     )
                 )
-            ]
-        )
-    )
