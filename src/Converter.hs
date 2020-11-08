@@ -3,10 +3,9 @@ module Converter (preRender) where
 import           Data.Traversable (mapAccumL)
 import           Types
 
-preRender :: Scope -> RenderableScope
-preRender scope = fmap toRender treeWithColours
+preRender :: ScopeTree -> RenderableScope
+preRender scopeTree = fmap toRender treeWithColours
     where
-        scopeTree = toTree scope
         treeWithHeights = getHeight scopeTree
         treeWithTops = getTops treeWithHeights 0
         treeWithColours = getColours treeWithTops chartColours
