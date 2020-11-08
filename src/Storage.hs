@@ -1,18 +1,21 @@
 {-# LANGUAGE OverloadedStrings   #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Storage(readScope, writeScope, writeRenderableScope, parseScopeTree, getValueTree, parseValue, parseValueTree, testv, parseValuesToTree, toScopeTree) where
+module Storage
+    (readScope
+    , writeRenderableScope
+) where
 
 import           Control.Exception
 import           Data.Aeson
 import qualified Data.ByteString.Lazy.Char8 as BS
 import qualified Data.HashMap.Strict        as HM
 import           Data.Maybe                 (fromJust)
-import           Data.Scientific
+import           Data.Scientific            (toBoundedInteger)
 import           Data.Text                  (Text, unpack)
 import           Types                      (InputType (FromFile, FromStdIn),
                                              NT (..), RenderableScope,
-                                             RunOptions (..), Scope,
+                                             RunOptions (..),
                                              ScopeData (ScopeData), ScopeTree)
 
 readScope :: RunOptions -> IO ScopeTree
@@ -23,15 +26,12 @@ readScope runOptions = do
           Handler(\ (e :: IOException) -> return Nothing)
         ]
     case mbScope of
-        Nothing      -> error $ "Error parsing the file"
+        Nothing    -> error $ "Error parsing the file"
         Just scope -> return scope
 
 getContent :: RunOptions -> IO BS.ByteString
 getContent (RunOptions (FromFile dataPath)) = BS.readFile dataPath
 getContent (RunOptions FromStdIn)           = BS.getContents
-
-writeScope :: Scope -> IO ()
-writeScope scope = BS.putStrLn $ Data.Aeson.encode scope
 
 writeRenderableScope :: RenderableScope -> IO ()
 writeRenderableScope = print
@@ -67,108 +67,7 @@ isSomething :: NT (Maybe ScopeData) -> Bool
 isSomething (N Nothing _) = False
 isSomething _             = True
 
-
-
-
 getNumber :: Maybe Value -> Maybe Int
 getNumber (Just (Number sc)) = toBoundedInteger sc
 getNumber _                  = Nothing
 
-testv =
-    ( Object
-        ( HM.fromList
-            [
-                ( "analytics"
-                , Object
-                    ( HM.fromList
-                        [
-                            ( "e"
-                            , Number 550.0
-                            )
-                        ,
-                            ( "s"
-                            , Number 500.0
-                            )
-                        ]
-                    )
-                )
-            ,
-            getTotal
-            ]
-        )
-    )
-
-getTotal = ( "total"
-                , Object
-                    ( HM.fromList
-                        [
-                            ( "database"
-                            , Object
-                                ( HM.fromList
-                                    [
-                                        ( "connect"
-                                        , Object
-                                            ( HM.fromList
-                                                [
-                                                    ( "e"
-                                                    , Number 320.0
-                                                    )
-                                                ,
-                                                    ( "s"
-                                                    , Number 210.0
-                                                    )
-                                                ]
-                                            )
-                                        )
-                                    ,
-                                        ( "query"
-                                        , Object
-                                            ( HM.fromList
-                                                [
-                                                    ( "e"
-                                                    , Number 450.0
-                                                    )
-                                                ,
-                                                    ( "s"
-                                                    , Number 320.0
-                                                    )
-                                                ]
-                                            )
-                                        )
-                                    ,
-                                        ( "e"
-                                        , Number 500.0
-                                        )
-                                    ,
-                                        ( "s"
-                                        , Number 200.0
-                                        )
-                                    ]
-                                )
-                            )
-                        ,
-                            ( "ui"
-                            , Object
-                                ( HM.fromList
-                                    [
-                                        ( "e"
-                                        , Number 640.0
-                                        )
-                                    ,
-                                        ( "s"
-                                        , Number 500.0
-                                        )
-                                    ]
-                                )
-                            )
-                        ,
-                            ( "e"
-                            , Number 650.0
-                            )
-                        ,
-                            ( "s"
-                            , Number 10.0
-                            )
-                        ]
-                    )
-                )
