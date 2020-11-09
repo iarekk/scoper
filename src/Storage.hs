@@ -13,8 +13,9 @@ import qualified Data.HashMap.Strict        as HM
 import           Data.Maybe                 (fromJust)
 import           Data.Scientific            (toBoundedInteger)
 import           Data.Text                  (Text, unpack)
+import           Data.Tree
 import           Types                      (InputType (FromFile, FromStdIn),
-                                             NT (..), RenderableScope,
+                                             RenderableScope,
                                              RunOptions (..),
                                              ScopeData (ScopeData), ScopeTree)
 
@@ -42,15 +43,15 @@ parseScopeTree s = toScopeTree $ parseValuesToTree $ getValueTree s
 getValueTree :: BS.ByteString -> Maybe Value
 getValueTree s = decode s
 
-parseValuesToTree :: Maybe Value -> NT (Maybe ScopeData)
+parseValuesToTree :: Maybe Value -> Tree (Maybe ScopeData)
 parseValuesToTree (Just (Object o)) = parsedTree where
-    parsedTree = N (Just $ ScopeData "query" 0 1000) (map parseValueTree (HM.toList o))
-parseValuesToTree _ = N Nothing []
+    parsedTree = Node (Just $ ScopeData "query" 0 1000) (map parseValueTree (HM.toList o))
+parseValuesToTree _ = Node Nothing []
 
-parseValueTree :: (Text, Value) -> NT (Maybe ScopeData)
-parseValueTree (s, Object o) = N (parseValue o s) chd where
+parseValueTree :: (Text, Value) -> Tree (Maybe ScopeData)
+parseValueTree (s, Object o) = Node (parseValue o s) chd where
   chd = map parseValueTree (HM.toList o)
-parseValueTree (_,_) = N Nothing []
+parseValueTree (_,_) = Node Nothing []
 
 parseValue :: Object -> Text -> Maybe ScopeData
 parseValue hm n = sd where
@@ -58,13 +59,13 @@ parseValue hm n = sd where
     s = getNumber (HM.lookup "s" hm)
     sd = ScopeData (unpack n) <$> s <*> e
 
-toScopeTree :: NT (Maybe ScopeData) -> Maybe ScopeTree
-toScopeTree (N (Just sd) ts) = Just (N sd ts') where
+toScopeTree :: Tree (Maybe ScopeData) -> Maybe ScopeTree
+toScopeTree (Node (Just sd) ts) = Just (Node sd ts') where
   ts' = map (fromJust . toScopeTree) (filter isSomething ts)
 toScopeTree _ = Nothing
 
-isSomething :: NT (Maybe ScopeData) -> Bool
-isSomething (N Nothing _) = False
+isSomething :: Tree (Maybe ScopeData) -> Bool
+isSomething (Node Nothing _) = False
 isSomething _             = True
 
 getNumber :: Maybe Value -> Maybe Int

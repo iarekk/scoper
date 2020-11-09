@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 959df61bc7856cd1fc35642d2d730bc65ec7cbd807fbb791e75876bc875d8877
+-- hash: fc20551b5cf273acbb582b49dde8e2d8cef1eb161eb6aaef2fecd81d07b20e51
 
 name:           scoper
 version:        0.1.0.0
@@ -42,6 +42,7 @@ library
     , blank-canvas
     , bytestring
     , colour
+    , containers
     , optparse-applicative
     , scientific
     , text
@@ -61,6 +62,7 @@ executable scoper-exe
     , blank-canvas
     , bytestring
     , colour
+    , containers
     , optparse-applicative
     , scientific
     , scoper
@@ -82,6 +84,7 @@ test-suite scoper-test
     , blank-canvas
     , bytestring
     , colour
+    , containers
     , optparse-applicative
     , scientific
     , scoper
