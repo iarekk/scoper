@@ -2,6 +2,7 @@ module Converter (preRender) where
 
 import           Data.Traversable (mapAccumL)
 import           Types
+import Data.Tree
 
 preRender :: ScopeTree -> RenderableScope
 preRender scopeTree = fmap toRender treeWithColours
@@ -10,17 +11,17 @@ preRender scopeTree = fmap toRender treeWithColours
         treeWithTops = getTops treeWithHeights 0
         treeWithColours = getColours treeWithTops chartColours
 
-getHeight :: NT ScopeData -> NT (ScopeData, ScopeHeight)
-getHeight (N sd ts) = N (sd, chs) nts where
+getHeight :: Tree ScopeData -> Tree (ScopeData, ScopeHeight)
+getHeight (Node sd ts) = Node (sd, chs) nts where
     nts = map getHeight ts
     chs = 1 + (sum $ map gh nts)
-    gh (N (_,h) _) = h
+    gh (Node (_,h) _) = h
 
-getTops :: NT (ScopeData, ScopeHeight) -> ScopeTop -> NT (ScopeData, ScopeHeight, ScopeTop)
+getTops :: Tree (ScopeData, ScopeHeight) -> ScopeTop -> Tree (ScopeData, ScopeHeight, ScopeTop)
 getTops t st = snd $ mapAccumL f st t where
     f top (sd, h) = (top+1, (sd, h, top))
 
-getColours :: NT (ScopeData, ScopeHeight, ScopeTop) -> [ScopeColour] -> NT (ScopeData, ScopeHeight, ScopeTop, ScopeColour)
+getColours :: Tree (ScopeData, ScopeHeight, ScopeTop) -> [ScopeColour] -> Tree (ScopeData, ScopeHeight, ScopeTop, ScopeColour)
 getColours t cols = snd $ mapAccumL f cols t where
     f (c:cs) (sd, h, top) = (cs, (sd, h, top, c))
     f [] _                = error "colours are meant to be infinite"

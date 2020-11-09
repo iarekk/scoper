@@ -25,6 +25,7 @@ dependencies:
 - blank-canvas
 - bytestring
 - colour
+- containers
 - optparse-applicative
 - scientific
 - text

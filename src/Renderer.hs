@@ -3,6 +3,7 @@
 module Renderer(drawDiagram) where
 import qualified Data.Colour.SRGB     as DCS
 import qualified Data.Text            as T
+import           Data.Tree
 import           Graphics.Blank
 import qualified Graphics.Blank.Style as GBS
 import           Types
@@ -32,7 +33,7 @@ getDrawingMetadata t = DrawingMetadata ratio where
     maxEnd = maximum getEnds
 
 renderScope :: DrawingMetadata -> RenderableScope -> Canvas()
-renderScope metaData (N (RenderableScopeData (ScopeData n s e) h t col) cs) = do
+renderScope metaData (Node (RenderableScopeData (ScopeData n s e) h t col) cs) = do
     let (DrawingMetadata millisecondToPxRatio) = metaData
     let x = fromIntegral s * millisecondToPxRatio + leftMargin
     let y = fromIntegral t * rowHeight + topMargin
