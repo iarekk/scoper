@@ -53,6 +53,9 @@ parseValueTree (s, Object o) = Node (parseValue o s) chd where
   chd = map parseValueTree (HM.toList o)
 parseValueTree _ = Node Nothing []
 
+-- unfoldTree :: (b -> (a, [b])) -> b -> Tree a
+-- (Text,Value) -> (Maybe ScopeData, [(Text,Value)] -> Tree (Maybe ScopeData)
+
 parseValue :: Object -> Text -> Maybe ScopeData
 parseValue hm n = sd where
     e = getNumber (HM.lookup "e" hm)
