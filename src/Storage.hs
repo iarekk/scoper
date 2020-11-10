@@ -10,13 +10,12 @@ import           Control.Exception
 import           Data.Aeson
 import qualified Data.ByteString.Lazy.Char8 as BS
 import qualified Data.HashMap.Strict        as HM
-import           Data.Maybe                 (fromJust)
+import           Data.Maybe                 (fromJust, isNothing)
 import           Data.Scientific            (toBoundedInteger)
 import           Data.Text                  (Text, unpack)
 import           Data.Tree
 import           Types                      (InputType (FromFile, FromStdIn),
-                                             RenderableScope,
-                                             RunOptions (..),
+                                             RenderableScope, RunOptions (..),
                                              ScopeData (ScopeData), ScopeTree)
 
 readScope :: RunOptions -> IO ScopeTree
@@ -38,20 +37,21 @@ writeRenderableScope :: RenderableScope -> IO ()
 writeRenderableScope = print
 
 parseScopeTree :: BS.ByteString -> Maybe ScopeTree
-parseScopeTree s = toScopeTree $ parseValuesToTree $ getValueTree s
-
-getValueTree :: BS.ByteString -> Maybe Value
-getValueTree s = decode s
+parseScopeTree s = toScopeTree $ parseValuesToTree $ decode s
 
 parseValuesToTree :: Maybe Value -> Tree (Maybe ScopeData)
 parseValuesToTree (Just (Object o)) = parsedTree where
-    parsedTree = Node (Just $ ScopeData "query" 0 1000) (map parseValueTree (HM.toList o))
+    nodeName = "total"
+    totalNode = HM.lookup nodeName o
+    parsedTree = if(not $ isNothing totalNode)
+      then parseValueTree (nodeName, fromJust totalNode)
+      else error "can't find the total node"
 parseValuesToTree _ = Node Nothing []
 
 parseValueTree :: (Text, Value) -> Tree (Maybe ScopeData)
 parseValueTree (s, Object o) = Node (parseValue o s) chd where
   chd = map parseValueTree (HM.toList o)
-parseValueTree (_,_) = Node Nothing []
+parseValueTree _ = Node Nothing []
 
 parseValue :: Object -> Text -> Maybe ScopeData
 parseValue hm n = sd where
@@ -65,8 +65,7 @@ toScopeTree (Node (Just sd) ts) = Just (Node sd ts') where
 toScopeTree _ = Nothing
 
 isSomething :: Tree (Maybe ScopeData) -> Bool
-isSomething (Node Nothing _) = False
-isSomething _             = True
+isSomething (Node v _) = not $ isNothing v
 
 getNumber :: Maybe Value -> Maybe Int
 getNumber (Just (Number sc)) = toBoundedInteger sc
