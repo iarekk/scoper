@@ -28,7 +28,7 @@ drawDiagram rScope = do
 
 getDrawingMetadata :: RenderableScope -> DrawingMetadata
 getDrawingMetadata t = DrawingMetadata ratio where
-    ratio = maxWidth / (fromIntegral maxEnd)
+    ratio = maxWidth / fromIntegral maxEnd
     getEnds = fmap (\ ((RenderableScopeData (ScopeData _ _ e) _ _ _)) -> e) t
     maxEnd = maximum getEnds
 
