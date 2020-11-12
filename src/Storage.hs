@@ -2,7 +2,7 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
 module Storage
-    (readScope
+    ( readScope
     , writeRenderableScope
 ) where
 
@@ -55,10 +55,9 @@ parseValueTree = unfoldTree f where
   f _             = (Nothing, [])
 
 parseValue :: Text -> Object -> Maybe ScopeData
-parseValue n o = sd where
+parseValue n o = ScopeData (unpack n) <$> s <*> e where
     e = getNumber (HM.lookup "e" o)
     s = getNumber (HM.lookup "s" o)
-    sd = ScopeData (unpack n) <$> s <*> e
 
 toScopeTree :: Tree (Maybe ScopeData) -> Maybe ScopeTree
 toScopeTree (Node (Just sd) ts) = Just (Node sd ts') where
