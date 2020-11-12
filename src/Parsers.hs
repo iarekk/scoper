@@ -2,8 +2,8 @@
 
 module Parsers (runParser) where
 
-import Options.Applicative
-import Types
+import           Options.Applicative
+import           Types
 
 runParser :: IO RunOptions
 runParser = execParser (info optionsParser (progDesc "Run scope visualizer application"))

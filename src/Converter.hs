@@ -1,8 +1,8 @@
 module Converter (preRender) where
 
 import           Data.Traversable (mapAccumL)
+import           Data.Tree
 import           Types
-import Data.Tree
 
 preRender :: ScopeTree -> RenderableScope
 preRender scopeTree = fmap toRender treeWithColours
@@ -14,7 +14,7 @@ preRender scopeTree = fmap toRender treeWithColours
 getHeight :: Tree ScopeData -> Tree (ScopeData, ScopeHeight)
 getHeight (Node sd ts) = Node (sd, chs) nts where
     nts = map getHeight ts
-    chs = 1 + (sum $ map gh nts)
+    chs = 1 + sum (map gh nts)
     gh (Node (_,h) _) = h
 
 getTops :: Tree (ScopeData, ScopeHeight) -> ScopeTop -> Tree (ScopeData, ScopeHeight, ScopeTop)
