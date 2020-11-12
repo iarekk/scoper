@@ -4,8 +4,7 @@
 
 module Types where
 
-import           Data.Aeson
-import           GHC.Generics
+import Data.Tree
 
 newtype RunOptions =
     RunOptions InputType
@@ -16,30 +15,17 @@ data InputType
     | FromStdIn
     deriving Show
 
-data NT a = N a [NT a]
-    deriving (Show, Functor, Traversable, Foldable)
-
 type MillisecondsToPxRatio = Double
-type RenderableScope       = NT RenderableScopeData
-type ScopeChildren         = Maybe [Scope]
+type RenderableScope       = Tree RenderableScopeData
 type ScopeColour           = String
 type ScopeEnd              = Int
 type ScopeHeight           = Int
 type ScopeName             = String
 type ScopeStart            = Int
 type ScopeTop              = Int
+type ScopeTree             = Tree ScopeData
 
 data DrawingMetadata = DrawingMetadata MillisecondsToPxRatio
-
-data Scope = Scope
-    { name :: ScopeName
-    , s    :: ScopeStart
-    , e    :: ScopeEnd
-    , c    :: ScopeChildren
-    } deriving (Generic, Show)
-instance ToJSON Scope
-instance FromJSON Scope
-
 data RenderableScopeData = RenderableScopeData
     ScopeData
     ScopeHeight

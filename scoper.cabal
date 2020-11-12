@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 838d844dbbd948ebdbfd61545c0d621149ddfb321b3e340c53f4a18ec7613c53
+-- hash: fc20551b5cf273acbb582b49dde8e2d8cef1eb161eb6aaef2fecd81d07b20e51
 
 name:           scoper
 version:        0.1.0.0
@@ -42,8 +42,11 @@ library
     , blank-canvas
     , bytestring
     , colour
+    , containers
     , optparse-applicative
+    , scientific
     , text
+    , unordered-containers
   default-language: Haskell2010
 
 executable scoper-exe
@@ -59,9 +62,12 @@ executable scoper-exe
     , blank-canvas
     , bytestring
     , colour
+    , containers
     , optparse-applicative
+    , scientific
     , scoper
     , text
+    , unordered-containers
   default-language: Haskell2010
 
 test-suite scoper-test
@@ -78,7 +84,10 @@ test-suite scoper-test
     , blank-canvas
     , bytestring
     , colour
+    , containers
     , optparse-applicative
+    , scientific
     , scoper
     , text
+    , unordered-containers
   default-language: Haskell2010
