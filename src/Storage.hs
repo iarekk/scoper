@@ -10,7 +10,7 @@ import           Control.Exception
 import           Data.Aeson
 import qualified Data.ByteString.Lazy.Char8 as BS
 import qualified Data.HashMap.Strict        as HM
-import           Data.Maybe                 (fromJust, isNothing)
+import           Data.Maybe                 (fromJust, isJust)
 import           Data.Scientific            (toBoundedInteger)
 import           Data.Text                  (Text, unpack)
 import           Data.Tree
@@ -43,23 +43,20 @@ parseValuesToTree :: Maybe Value -> Tree (Maybe ScopeData)
 parseValuesToTree (Just (Object o)) = parsedTree where
     nodeName = "total"
     totalNode = HM.lookup nodeName o
-    parsedTree = if(not $ isNothing totalNode)
+    parsedTree = if isJust totalNode
       then parseValueTree (nodeName, fromJust totalNode)
       else error "can't find the total node"
 parseValuesToTree _ = Node Nothing []
 
 parseValueTree :: (Text, Value) -> Tree (Maybe ScopeData)
-parseValueTree (s, Object o) = Node (parseValue o s) chd where
-  chd = map parseValueTree (HM.toList o)
-parseValueTree _ = Node Nothing []
+parseValueTree = unfoldTree f where
+  f (s, Object o) = (parseValue s o, HM.toList o)
+  f _ = (Nothing, [])
 
--- unfoldTree :: (b -> (a, [b])) -> b -> Tree a
--- (Text,Value) -> (Maybe ScopeData, [(Text,Value)] -> Tree (Maybe ScopeData)
-
-parseValue :: Object -> Text -> Maybe ScopeData
-parseValue hm n = sd where
-    e = getNumber (HM.lookup "e" hm)
-    s = getNumber (HM.lookup "s" hm)
+parseValue :: Text -> Object -> Maybe ScopeData
+parseValue n o = sd where
+    e = getNumber (HM.lookup "e" o)
+    s = getNumber (HM.lookup "s" o)
     sd = ScopeData (unpack n) <$> s <*> e
 
 toScopeTree :: Tree (Maybe ScopeData) -> Maybe ScopeTree
@@ -68,7 +65,7 @@ toScopeTree (Node (Just sd) ts) = Just (Node sd ts') where
 toScopeTree _ = Nothing
 
 isSomething :: Tree (Maybe ScopeData) -> Bool
-isSomething (Node v _) = not $ isNothing v
+isSomething (Node v _) = isJust v
 
 getNumber :: Maybe Value -> Maybe Int
 getNumber (Just (Number sc)) = toBoundedInteger sc
