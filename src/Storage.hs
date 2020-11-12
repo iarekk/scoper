@@ -21,12 +21,13 @@ import           Types                      (InputType (FromFile, FromStdIn),
 readScope :: RunOptions -> IO ScopeTree
 readScope runOptions = do
     mbScope <-
+        -- TODO how to split these operations in separate catches / handlers?
         catches (parseScopeTree <$> getContent runOptions)
         [
           Handler(\ (e :: IOException) -> return Nothing)
         ]
     case mbScope of
-        Nothing    -> error $ "Error parsing the file"
+        Nothing    -> error "Error parsing the file"
         Just scope -> return scope
 
 getContent :: RunOptions -> IO BS.ByteString
@@ -51,7 +52,7 @@ parseValuesToTree _ = Node Nothing []
 parseValueTree :: (Text, Value) -> Tree (Maybe ScopeData)
 parseValueTree = unfoldTree f where
   f (s, Object o) = (parseValue s o, HM.toList o)
-  f _ = (Nothing, [])
+  f _             = (Nothing, [])
 
 parseValue :: Text -> Object -> Maybe ScopeData
 parseValue n o = sd where
