@@ -25,8 +25,12 @@ dependencies:
 - blank-canvas
 - bytestring
 - colour
+- containers
 - optparse-applicative
+- scientific
 - text
+- unordered-containers
+
 
 library:
   source-dirs: src
