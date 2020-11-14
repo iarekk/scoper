@@ -3,7 +3,7 @@
 
 module Storage
     ( readScope
-    , writeRenderableScope
+    , writeRenderableScope, showScope, getContent, parseValue, parseValuesToTree, parseValueTree
 ) where
 
 import           Control.Exception
@@ -14,9 +14,11 @@ import           Data.Maybe                 (fromJust, isJust)
 import           Data.Scientific            (toBoundedInteger)
 import           Data.Text                  (Text, unpack)
 import           Data.Tree
+import           Text.Read                  (readMaybe)
 import           Types                      (InputType (FromFile, FromStdIn),
                                              RenderableScope, RunOptions (..),
                                              ScopeData (ScopeData), ScopeTree)
+import GHC.Exts(sortWith)
 
 readScope :: RunOptions -> IO ScopeTree
 readScope runOptions = do
@@ -42,11 +44,13 @@ parseScopeTree s = toScopeTree $ parseValuesToTree $ decode s
 
 parseValuesToTree :: Maybe Value -> Tree (Maybe ScopeData)
 parseValuesToTree (Just (Object o)) = parsedTree where
-    nodeName = "total"
-    totalNode = HM.lookup nodeName o
-    parsedTree = if isJust totalNode
-      then parseValueTree (nodeName, fromJust totalNode)
-      else error "can't find the total node"
+    -- totalNodeName = "total"
+    -- totalNode = HM.lookup nodeName o
+    -- parsedTree = if isJust totalNode
+    --   then parseValueTree (nodeName, fromJust totalNode)
+    --   else error "can't find the total node"
+    subForest = map parseValueTree (HM.toList o)
+    parsedTree = Node (Just $ ScopeData "Query" 0 0) subForest
 parseValuesToTree _ = Node Nothing []
 
 parseValueTree :: (Text, Value) -> Tree (Maybe ScopeData)
@@ -61,7 +65,7 @@ parseValue n o = ScopeData (unpack n) <$> s <*> e where
 
 toScopeTree :: Tree (Maybe ScopeData) -> Maybe ScopeTree
 toScopeTree (Node (Just sd) ts) = Just (Node sd ts') where
-  ts' = map (fromJust . toScopeTree) (filter isSomething ts)
+  ts' = sortWith (\(Node (ScopeData _ s _) _) -> s) $ map (fromJust . toScopeTree) (filter isSomething ts)
 toScopeTree _ = Nothing
 
 isSomething :: Tree (Maybe ScopeData) -> Bool
@@ -69,5 +73,9 @@ isSomething (Node v _) = isJust v
 
 getNumber :: Maybe Value -> Maybe Int
 getNumber (Just (Number sc)) = toBoundedInteger sc
+getNumber (Just (String text))  = readMaybe (unpack text)
 getNumber _                  = Nothing
 
+
+showScope :: ScopeTree -> IO()
+showScope sc = putStrLn $ drawTree $ fmap show sc
