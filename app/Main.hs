@@ -12,7 +12,7 @@ main = do
     scope <- readScope runOptions
     showScope scope
     let renScope = preRender scope
-    putStrLn "open http://localhost:3000 to see the diagram"
+    putStrLn "open http://localhost:3000 to see the diagram" -- TODO: put the max height here, should be easy
     blankCanvas 3000 $ \ context -> -- start blank canvas on port 3000
             send context $                  -- send commands to this specific context
                     drawDiagram renScope
