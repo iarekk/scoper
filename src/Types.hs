@@ -25,7 +25,7 @@ type ScopeStart            = Int
 type ScopeTop              = Int
 type ScopeTree             = Tree ScopeData
 
-data DrawingMetadata = DrawingMetadata MillisecondsToPxRatio
+newtype DrawingMetadata = DrawingMetadata MillisecondsToPxRatio
 data RenderableScopeData = RenderableScopeData
     ScopeData
     ScopeHeight
