@@ -3,34 +3,42 @@
 
 module Storage
     ( readScope
-    , writeRenderableScope, showScope, getContent, parseValue, parseValuesToTree, parseValueTree
+    , writeRenderableScope, showScope, getContent, parseValue, parseValuesToTree, parseValueTree, getSlaFromNode
 ) where
 
 import           Control.Exception
 import           Data.Aeson
 import qualified Data.ByteString.Lazy.Char8 as BS
 import qualified Data.HashMap.Strict        as HM
-import           Data.Maybe                 (fromJust, isJust)
+import           Data.Maybe                 (fromJust, fromMaybe, isJust)
 import           Data.Scientific            (toBoundedInteger)
 import           Data.Text                  (Text, unpack)
 import           Data.Tree
+import           GHC.Exts                   (sortWith)
 import           Text.Read                  (readMaybe)
 import           Types                      (InputType (FromFile, FromStdIn),
                                              RenderableScope, RunOptions (..),
-                                             ScopeData (ScopeData), ScopeTree)
-import GHC.Exts(sortWith)
+                                             ScopeData (ScopeData),
+                                             ScopeMetadata (..), ScopeTree)
 
-readScope :: RunOptions -> IO ScopeTree
+readScope :: RunOptions -> IO (ScopeTree, ScopeMetadata)
 readScope runOptions = do
-    mbScope <-
-        -- TODO how to split these operations in separate catches / handlers?
-        catches (parseScopeTree <$> getContent runOptions)
-        [
-          Handler(\ (e :: IOException) -> return Nothing)
-        ]
+    content <- getContent runOptions
+    let mbScope = parseScopeTree content -- TODO return the error handling
+    let meta = parseMetadata content
     case mbScope of
         Nothing    -> error "Error parsing the file"
-        Just scope -> return scope
+        Just scope -> return (scope, meta)
+
+parseMetadata :: BS.ByteString -> ScopeMetadata
+parseMetadata jsonString = ScopeMetadata sla where
+  tree = decode jsonString
+  sla = getSlaFromNode tree
+
+getSlaFromNode (Just (Object o)) = sla where
+  trySla = getNumber (HM.lookup "sla" o)
+  sla = fromMaybe 2000 trySla
+getSlaFromNode _ = 2000
 
 getContent :: RunOptions -> IO BS.ByteString
 getContent (RunOptions (FromFile dataPath)) = BS.readFile dataPath
@@ -72,9 +80,9 @@ isSomething :: Tree (Maybe ScopeData) -> Bool
 isSomething (Node v _) = isJust v
 
 getNumber :: Maybe Value -> Maybe Int
-getNumber (Just (Number sc)) = toBoundedInteger sc
-getNumber (Just (String text))  = readMaybe (unpack text)
-getNumber _                  = Nothing
+getNumber (Just (Number sc))   = toBoundedInteger sc
+getNumber (Just (String text)) = readMaybe (unpack text)
+getNumber _                    = Nothing
 
 
 showScope :: ScopeTree -> IO()
