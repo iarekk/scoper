@@ -14,14 +14,16 @@ leftMargin = 20
 maxHeight = 1500
 maxWidth = 1500
 
-drawDiagram :: RenderableScope -> Canvas()
-drawDiagram rScope = do
+drawDiagram :: RenderableScope -> ScopeMetadata -> Canvas()
+drawDiagram rScope (ScopeMetadata sla) = do
     -- let (Node (RenderableScopeData _ totalHeight _ _) _) = rScope
     -- let totalHeightInPx = rowHeight * fromIntegral totalHeight
     --eval "NewCanvas(1000,2000);"
     -- eval "var canvas = document.getElementsByTagName('canvas')[0];canvas.width  = 1200;canvas.height = 2500;"
     --newCanvas (1000, 2000)
-    
+    let drawMeta = getDrawingMetadata rScope
+    let (DrawingMetadata millisecondToPxRatio) = drawMeta
+    let xSla = fromIntegral sla * millisecondToPxRatio + leftMargin
     lineWidth 1
     strokeStyle "black"
     moveTo(leftMargin, topMargin)
@@ -30,7 +32,12 @@ drawDiagram rScope = do
     moveTo(leftMargin, topMargin)
     lineTo(leftMargin, topMargin + maxHeight)
     stroke()
-    renderScope (getDrawingMetadata rScope) rScope
+    renderScope drawMeta rScope
+    lineWidth 1
+    strokeStyle "red"
+    moveTo(xSla, 0)
+    lineTo(xSla, 3000)
+    stroke()
 
 getDrawingMetadata :: RenderableScope -> DrawingMetadata
 getDrawingMetadata t = DrawingMetadata ratio where
