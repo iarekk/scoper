@@ -12,7 +12,7 @@ rowHeight = 25
 topMargin = 20
 leftMargin = 20
 maxHeight = 1500
-maxWidth = 1500
+maxWidth = 1900
 
 drawDiagram :: RenderableScope -> ScopeMetadata -> Canvas()
 drawDiagram rScope (ScopeMetadata sla) = do
@@ -21,7 +21,9 @@ drawDiagram rScope (ScopeMetadata sla) = do
     --eval "NewCanvas(1000,2000);"
     -- eval "var canvas = document.getElementsByTagName('canvas')[0];canvas.width  = 1200;canvas.height = 2500;"
     --newCanvas (1000, 2000)
-    let drawMeta = getDrawingMetadata rScope
+    fillStyle "white"
+    fillRect(0, 0, 2000, 4000)
+    let drawMeta = getDrawingMetadata rScope sla
     let (DrawingMetadata millisecondToPxRatio) = drawMeta
     let xSla = fromIntegral sla * millisecondToPxRatio + leftMargin
     lineWidth 1
@@ -38,10 +40,11 @@ drawDiagram rScope (ScopeMetadata sla) = do
     moveTo(xSla, 0)
     lineTo(xSla, 3000)
     stroke()
+    fillText(T.pack $ show sla, xSla, 20)
 
-getDrawingMetadata :: RenderableScope -> DrawingMetadata
-getDrawingMetadata t = DrawingMetadata ratio where
-    ratio = maxWidth / fromIntegral maxEnd
+getDrawingMetadata :: RenderableScope -> Sla -> DrawingMetadata
+getDrawingMetadata t sla = DrawingMetadata ratio where
+    ratio = maxWidth / fromIntegral (max maxEnd sla)
     getEnds = fmap (\ (RenderableScopeData (ScopeData _ _ e) _ _ _) -> e) t
     maxEnd = maximum getEnds
 
