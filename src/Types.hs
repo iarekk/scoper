@@ -4,7 +4,7 @@
 
 module Types where
 
-import Data.Tree
+import           Data.Tree
 
 newtype RunOptions =
     RunOptions InputType
@@ -24,8 +24,11 @@ type ScopeName             = String
 type ScopeStart            = Int
 type ScopeTop              = Int
 type ScopeTree             = Tree ScopeData
+type Sla = Int
 
-data DrawingMetadata = DrawingMetadata MillisecondsToPxRatio
+newtype DrawingMetadata = DrawingMetadata MillisecondsToPxRatio deriving Show
+
+newtype ScopeMetadata = ScopeMetadata Sla deriving Show
 data RenderableScopeData = RenderableScopeData
     ScopeData
     ScopeHeight
