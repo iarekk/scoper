@@ -38,7 +38,7 @@ drawDiagram rScope (ScopeMetadata sla) = do
     lineWidth 1
     strokeStyle "red"
     moveTo(xSla, 0)
-    lineTo(xSla, 3000)
+    lineTo(xSla, 4000)
     stroke()
     fillText(T.pack $ show sla, xSla, 20)
 
