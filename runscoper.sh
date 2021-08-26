@@ -1,0 +1,1 @@
+pbpaste | jq '.log.Message' | stack run -- -s
